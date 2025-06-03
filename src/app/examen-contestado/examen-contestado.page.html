@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Resultados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-col *ngFor="let resultado of resultados">
+      <ion-card class="ion-text-center">
+        <ion-card-header>
+          <ion-card-title>{{ resultado.examen_id.title }}</ion-card-title>
+          <ion-card-subtitle>{{ resultado.curso_id.title }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content class="card-content-header">
+          <ion-col size="6" class="user-info">
+            <p> <strong>Fecha De Aplicacion: </strong> {{resultado.createdAt | date:'dd/MM/yyyy' }}</p>
+            <h2>Respondido Por: <strong>{{ resultado.usuario_id.name }}</strong></h2>
+          </ion-col>
+          <ion-col size="6" class="calificacion">
+            <p>Calificacion Obtenida: <strong>{{ resultado.puntaje }}</strong></p>
+          </ion-col>
+
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <div class="quest-title">
+          <h3><strong>Cuestionario:</strong></h3>
+        </div>
+
+        <ion-list *ngFor="let respuesta of resultado.respuestas; let i = index" class="list-questions">
+          <ion-item class="quest-item">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12" class="quest-item-container">
+                  <h5><strong> {{ i + 1 }}-. {{ respuesta.pregunta }}</strong></h5>
+                  <!-- <p>Respuesta Ingresada: {{ respuesta.respuesta }}</p> -->
+                </ion-col>
+              </ion-row>
+
+              <ion-col size="12">
+                <label>Respuestas:</label>
+                <ion-row class="options-row">
+                  <ion-col *ngFor="let opcion of respuesta.options" size="12" class="option-item">
+                    <ion-item class="option-select">
+                      <ion-label class="option">{{ opcion }}</ion-label>
+                      <!-- Icono si la opción es la seleccionada -->
+                      <!-- Leyenda de respuesta seleccionada -->
+                      <span *ngIf="opcion === respuesta.respuesta" class="answer-legend">
+                        {{ respuesta.correcta ? '' : '' }}
+                      </span>
+                      <ion-icon *ngIf="opcion === respuesta.respuesta"
+                        [name]="respuesta.correcta ? 'checkmark-circle' : 'close-circle'"
+                        [class.correct-icon]="respuesta.correcta" [class.incorrect-icon]="!respuesta.correcta">
+                      </ion-icon>
+
+
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+
+            </ion-grid>
+          </ion-item>
+        </ion-list>
+
+      </ion-card>
+
+
+
+    </ion-col>
+  </ion-grid>
+</ion-content>

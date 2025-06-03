@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Resultados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <!-- Seleccionar Curso -->
+            <ion-item>
+              <!-- <ion-label>Curso</ion-label> -->
+              <ion-select (ionChange)="onCursoChange($event)" placeholder="Seleccionar Curso">
+                <ion-select-option *ngFor="let curso of cursos" [value]="curso.curso_id">{{ curso.title
+                  }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <!-- Seleccionar Examen -->
+            <ion-item>
+              <!-- <ion-label>Examen</ion-label> -->
+              <ion-select (ionChange)="onExamChange($event)" placeholder="Seleccionar Examen">
+                <ion-select-option *ngFor="let examen of examenes" [value]="examen._id">
+                  {{ examen.title }}
+                </ion-select-option>
+              </ion-select>
+
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="full" (click)="obtenerResultados()">
+              <ion-icon name="search" size="medium" color="light"></ion-icon>Resultados
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <ion-list>
+    <ion-item-divider>
+      <label><strong>Resultados</strong></label>
+    </ion-item-divider>
+  </ion-list>
+  <ion-grid>
+      <ion-col size="12">
+        <ion-list *ngIf="respuestas.length > 0">
+          <ion-item *ngFor="let respuesta of respuestas">
+            <ion-label>
+              <h2>Alumno: {{ respuesta.usuario_id?.name }}</h2>
+              <p>Curso: {{ respuesta.curso_id?.title }}</p>
+              <p>Examen: {{ respuesta.examen_id?.title }}</p>
+              <p>Calificación: {{ respuesta.puntaje }}</p>
+            </ion-label>
+            <ion-button class="btn-exa" color="secondary" slot="end" (click)="verDetalles(respuesta._id)">Ver examen</ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+  
+  </ion-grid>
+
+
+
+
+</ion-content>

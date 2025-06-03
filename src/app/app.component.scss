@@ -1,0 +1,85 @@
+ion-menu {
+    width: 250px;
+    /* Ancho del menú */
+}
+
+ion-split-pane {
+    --side-min-width: 350px;
+    /* Ancho mínimo del panel lateral */
+}
+
+
+.avatar-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.label-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+
+.label-info p {
+    font-size: 20px;
+}
+
+.label-info h2 {
+    font-size: 22px;
+}
+
+
+ion-item:hover {
+    background-color: #f0f0f0;
+    /* Cambia el color de fondo */
+    cursor: pointer;
+    /* Cambia el cursor a mano */
+    transition: background-color 0.3s ease;
+    /* Agrega una transición suave */
+}
+
+ion-item:hover ion-label {
+    color: #3880ff;
+    /* Cambia el color del texto al pasar el cursor */
+}
+
+
+ion-item.selected {
+  --color: var(--ion-color-primary);
+}
+ion-menu.md ion-item.selected {
+  --background: rgba(var(--ion-color-primary-rgb), 0.14);
+}
+ion-menu.md ion-item.selected ion-icon {
+  color: var(--ion-color-primary);
+}
+ion-menu.ios ion-item.selected ion-icon {
+  color: var(--ion-color-primary);
+}
+
+.tittle{
+  color: #000000; // Texto blanco
+  font-weight: bold; // Opción para hacer el título en negrita (opcional)
+  text-align: center;
+  font-weight: 300; // Letra más delgada (puedes ajustar el valor entre 100 y 400 para mayor delgadez)
+  font-size: 14px;
+}
+.toolbar{
+	vertical-align: middle;
+	max-height: 44px !important;
+}

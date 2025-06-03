@@ -1,0 +1,27 @@
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <ion-card class="login-card">
+      <div class="welcome-message">
+        <h1>Bienvenido</h1>
+        <p>Por favor ingresa tus credenciales para continuar.</p>
+      </div>
+      <form>
+        <ion-item class="email-input">
+          <ion-label position="floating">Nombre de Usuario</ion-label>
+          <ion-input type="email" placeholder="MyUser@example" required></ion-input>
+        </ion-item>
+
+        <ion-item class="password-input">
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input type="password" placeholder="********"> <ion-input-password-toggle
+              slot="end" color="secondary"></ion-input-password-toggle></ion-input>
+
+        </ion-item>
+
+        <ion-button expand="block" shape="round" color="secondary" class="login-button">
+          Iniciar sesión
+        </ion-button>
+      </form>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,0 +1,15 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+:root {
+    /* Actualizamos el fondo a gris muy claro */
+    --ion-background-color: #ffffff; /* Fondo gris muy claro */
+    --ion-background-color-rgb: 242, 242, 242;
+  
+    /* Los demás colores permanecen iguales */
+    --ion-text-color: #000000; /* Cambiamos el texto principal a negro */
+    --ion-color-primary: #2C2C2C; /* Dorado como color primario */
+    --ion-color-secondary: #2C2C2C; /* Gris antracita */
+    --ion-color-light: #B5B5B5; /* Gris claro */
+    --ion-color-dark: #000000; /* Negro para botones */
+    --ion-color-danger: #FF6B6B; /* Rojo para alertas */
+  }

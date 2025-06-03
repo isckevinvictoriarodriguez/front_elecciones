@@ -1,0 +1,50 @@
+ion-content {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+.login-container {
+  width: 100%; /* Opcional: asegura que el contenedor ocupe todo el ancho */
+  height: 100vh;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;;
+}
+
+.welcome-message {
+  font-size: 16px; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita */
+  margin-bottom: 20px; /* Espaciado inferior */
+  text-align: center;
+  margin-bottom: 80px; /* Espaciado inferior */
+}
+
+.login-card {
+  width: 40%; /* Ancho responsivo */
+  height: 500px;
+  padding: 20px; /* Espaciado interno */
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra para mejor visibilidad */
+}
+
+ion-item {
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
+ion-item, ion-label{
+  font-size: 18pxpx; /* Tamaño de fuente */
+}
+
+ion-input {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+ion-button{
+  margin-top: 20px; /* Espaciado superior */
+  height: 50px;
+  font-size: 16px;
+}
+

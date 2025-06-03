@@ -1,0 +1,611 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Buscador</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col align-self-center size-md="1" size-xs="12">
+      </ion-col>
+      <ion-col align-self-center size-md="3" size-xs="12">
+        <ion-item>
+          <ion-label position="stacked">Nombre: </ion-label>
+          <ion-input placeholder="#" [(ngModel)]="buscarPersona.nombre" (keyup.enter)="buscar()"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col align-self-center size-md="3" size-xs="12">
+        <ion-item>
+          <ion-label position="stacked">Apellido Paterno: </ion-label>
+          <ion-input placeholder="#" [(ngModel)]="buscarPersona.paterno" (keyup.enter)="buscar()"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col align-self-center size-md="3" size-xs="12">
+        <ion-item>
+          <ion-label position="stacked">Apellido Materno: </ion-label>
+          <ion-input placeholder="#" [(ngModel)]="buscarPersona.materno" (keyup.enter)="buscar()"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col align-self-center size-md="1" size-xs="12">
+        <ion-button (click)="limpiarCampos()" fill="clear" shape="round">
+          <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button class="boton-buscar" (click)="buscar()" expand="block" shape="round">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          BUSCAR
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" size-md="3" size-lg="3">
+        <ion-button (click)="filtrar('PENDIENTE')" expand="block" fill="clear" shape="round" [color]="'danger'">
+          PENDIENTES
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" size-md="3" size-lg="3">
+        <ion-button (click)="filtrar('PROCESO')" expand="block" fill="clear" shape="round" [color]="'warning'">
+          EN PROCESO
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" size-md="3" size-lg="3">
+        <ion-button (click)="filtrar('COMPLETO')" expand="block" fill="clear" shape="round" [color]="'success'">
+          COMPLETOS
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" size-md="3" size-lg="3">
+        <ion-button (click)="filtrar('REGISTRADO')" expand="block" fill="clear" shape="round" [color]="'primary'">
+          REGISTRADO
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div *ngIf="isLoading; else resultadosPers">
+    <ion-toolbar color="primary">
+      <ion-title>CARGANDO LISTADO DE PERSONAS...</ion-title>
+    </ion-toolbar>
+    <ion-skeleton-text animated style="width: 100%; height: 50px;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 50%; height: 30px;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 50%; height: 30px;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 70%; height: 30px;"></ion-skeleton-text>
+  </div>
+  <ng-template #resultadosPers>
+    <div *ngIf="usuariosFiltrados.length > 0; else sinResultados">
+      <ion-list>
+        <div *ngFor="let item of usuariosFiltrados; let i = index">
+          <ion-card>
+            <ion-toolbar>
+              <ion-buttons slot="end">
+                <ion-button (click)="abrirModalTotales(item)" title="Actualizar Estatus">
+                  <ion-icon slot="icon-only" color="secondary" name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button *ngIf="item.estatus === 'COMPLETO'" (click)="abrirModalFoto(item)" title="Foto">
+                  <ion-icon slot="icon-only" color="secondary" name="image-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="copiarInfo(item)" title="Copiar">
+                  <ion-icon slot="icon-only" color="secondary" name="copy-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="abrirModalGeneral(); VerInfoUser(item)" title="Ver Info">
+                  <ion-icon slot="icon-only" color="secondary" name="eye-outline"></ion-icon>
+                </ion-button>
+                <ion-button *ngIf="item?.rol != 'INVITADO'" (click)="abrirModalGerarquias(item)" title="Jerarquía">
+                  <ion-icon slot="icon-only" color="secondary" name="git-merge-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+              <ion-card-header>
+                <ion-card-title>{{ item.nombre + ' ' + item.paterno + ' ' +
+                  item.materno}}</ion-card-title>
+                <ion-card-subtitle>
+                  <div *ngIf="item.estatus === 'PENDIENTE'">
+                    <ion-card-subtitle color="danger">
+                      <strong>ESTATUS:</strong> {{item.estatus || 'SIN DATOS' | uppercase }} <br>
+                    </ion-card-subtitle>
+                  </div>
+                  <div *ngIf="item.estatus === 'PROCESO'">
+                    <ion-card-subtitle color="warning">
+                      <strong>ESTATUS:</strong> {{item.estatus || 'SIN DATOS' | uppercase }} <br>
+                    </ion-card-subtitle>
+                  </div>
+                  <div *ngIf="item.estatus === 'COMPLETO'">
+                    <ion-card-subtitle color="success">
+                      <strong>ESTATUS:</strong> {{item.estatus || 'SIN DATOS' | uppercase }} <br>
+                    </ion-card-subtitle>
+                  </div>
+                  <strong>ROL:</strong> {{item.rol || 'SIN DATOS' | uppercase }} <br>
+                  <strong>TELEFONO:</strong> {{item.telefono || 'SIN DATOS' | uppercase }} <br>
+                  <!-- <strong>WHATSAPP:</strong> {{item.whatsapp || 'SIN DATOS' | uppercase }} <br> -->
+                  <div *ngIf="item.rol === 'INVITADO'">
+                    <strong>LIDER:</strong> {{item.lider || 'SIN DATOS' | uppercase }} <br>
+
+                    <strong>RESPONSABLE:</strong> {{item.responsable?.[0]?.nombre || 'SIN DATOS' | uppercase }} - 📱
+                    {{item?.responsable?.[0]?.telefono || 'SIN
+                    DATOS'}}
+                    <br>
+                    <strong>MOVILIZADOR:</strong> {{item.movilizador?.[0]?.nombre || 'SIN DATOS' | uppercase }} 📱
+                    {{item?.movilizador?.[0]?.telefono || 'SIN
+                    DATOS'}} <br>
+
+                  </div>
+                  <div *ngIf="item.rol === 'MOVILIZADOR'">
+                    <strong>LIDER:</strong> {{item.lider || 'SIN DATOS' | uppercase }} <br>
+
+                    <strong>RESPONSABLE:</strong> {{item.responsable?.[0]?.nombre || 'SIN DATOS' | uppercase }}
+                    {{item?.responsable?.[0]?.telefono || 'SIN
+                    DATOS'}} <br>
+                  </div>
+                  <div *ngIf="item.rol === 'RESPONSABLE'">
+                    <strong>LIDER:</strong> {{item.lider || 'SIN DATOS' | uppercase }} <br>
+
+                  </div>
+                </ion-card-subtitle>
+              </ion-card-header>
+            </ion-toolbar>
+          </ion-card>
+        </div>
+      </ion-list>
+    </div>
+    <ng-template #sinResultados>
+      <div *ngIf="sinRes">
+        <ion-card>
+          <ion-card-content>
+            NO SE ENCONTRARON REGISTROS DE PERSONAS.
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-template>
+
+    <!-- Scroll infinite -->
+    <ion-infinite-scroll *ngIf="showInfiniteScroll" threshold="100px" (ionInfinite)="cargarMas($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más registros..."></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </ng-template>
+
+  <!-- MODAL ACTUALIZAR ESTATUS -->
+  <ion-modal [isOpen]="isOpenModalTotales" (didDismiss)="isOpenModalTotales = false" class="custom-modal2">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>CAMBIO DE ESTATUS </ion-title>
+        <ion-buttons style="cursor: pointer;" slot="end">
+          <ion-icon (click)="closeModal('totales')" name="close-outline" slot="icon-only"></ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div *ngIf="mostrarFormularioFlag">
+        <form [formGroup]="userForm" (ngSubmit)="updateUser()">
+          <ion-grid fixed>
+            <ion-row>
+              <ion-col size="12" size-md="12" size-lg="12">
+                <ion-item>
+                  <ion-select formControlName="estatus" label="ESTATUS:" placeholder="Seleccione un Estatus"
+                    label-placement="floating">
+                    <ion-select-option value="PENDIENTE">PENDIENTE</ion-select-option>
+                    <ion-select-option value="PROCESO">PROCESO</ion-select-option>
+                    <ion-select-option value="COMPLETO">COMPLETO</ion-select-option>
+                    <ion-select-option value="REGISTRADO">REGISTRADO</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-text color="danger" style="display: block; text-align: center;"
+                  *ngIf="userForm.get('estatus')?.invalid && userForm.get('estatus')?.touched">
+                  <strong>*ESTATUS</strong> es campo obligatorio.
+                </ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="mostrarFotosFlag">
+              <ion-col size="12" size-md="3" size-lg="3"></ion-col>
+              <ion-col size="12" size-md="6" size-lg="6">
+                <ion-list formArrayName="fotos">
+                  <ion-list-header>
+                    <ion-button *ngIf="foto.length === 0" (click)="addFoto()" expand="block">
+                      <ion-icon name="add-outline" slot="start"></ion-icon>
+                      Agregar Foto
+                    </ion-button>
+                  </ion-list-header>
+                  <div *ngFor="let fotoItem of foto.controls; let i = index" [formGroupName]="i">
+                    <ion-card>
+                      <ion-card-content class="foto-card-content">
+                        <input type="file" #fileInput hidden (change)="onFileChange($event, i)" accept="image/*" />
+                        <ion-col size="12" size-md="6" size-lg="6">
+                          <ion-button class="transparent-button" expand="block" (click)="fileInput.click()">
+                            <ion-icon class="large-icon" slot="icon-only" color="primary"
+                              name="image-outline"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                        <!-- <ion-item lines="none" *ngIf="fotoItem.get('imagen')?.value">
+                          <ion-img [src]="fotoItem.get('imagen')?.value" alt="Imagen seleccionada"></ion-img>
+                        </ion-item> -->
+                        <div class="img-wrapper" *ngIf="fotoItem.get('imagen')?.value">
+                          <img [src]="fotoItem.get('imagen')?.value" alt="Imagen seleccionada" />
+                        </div>
+                        <ion-col size="12" size-md="6" size-lg="6">
+                          <ion-button class="transparent-button" expand="block" (click)="removeFoto(i)">
+                            <ion-icon class="large-icon" name="trash-outline" slot="icon-only"
+                              color="danger"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-card-content>
+                    </ion-card>
+                  </div>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-button type="submit" expand="full">
+            {{ 'Actualizar Estatus' }}
+          </ion-button>
+        </form>
+      </div>
+    </ion-content>
+  </ion-modal>
+
+  <!-- Modal foto v1 -->
+  <ion-modal [isOpen]="isOpenModalFoto" (didDismiss)="isOpenModalFoto = false" class="custom-modal-verFoto">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>FOTO EVIDENCIA</ion-title>
+        <ion-buttons style="cursor: pointer;" slot="end">
+          <ion-icon (click)="closeModal('foto')" name="close-outline" slot="icon-only"></ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div *ngIf="mostrarFormularioFlag">
+        <form [formGroup]="userForm" (ngSubmit)="updateUserFoto()">
+          <ion-grid fixed>
+            <ion-row>
+              <ion-col size="12" size-md="3" size-lg="3"></ion-col>
+              <ion-col size="12" size-md="6" size-lg="6">
+                <ion-list formArrayName="fotos">
+                  <div *ngFor="let fotoItem of foto.controls; let i = index" [formGroupName]="i">
+                    <ion-card>
+                      <ion-card-content>
+                        <ion-item lines="none" *ngIf="fotoItem.get('imagen')?.value">
+                          <ion-img [src]="fotoItem.get('imagen')?.value" alt="Imagen seleccionada"></ion-img>
+                        </ion-item>
+                      </ion-card-content>
+                    </ion-card>
+                  </div>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+      </div>
+    </ion-content>
+  </ion-modal>
+
+  <!-- MODAL VER FOTO v2 -->
+  <!-- <ion-modal [isOpen]="isOpenModalFoto" (didDismiss)="isOpenModalFoto = false" class="custom-modal2">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>FOTO EVIDENCIA</ion-title>
+        <ion-buttons slot="end">
+          <ion-icon (click)="closeModal('foto')" name="close-outline" slot="icon-only"
+            style="cursor: pointer;"></ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div *ngIf="foto?.controls?.[0]?.get('imagen')?.value">
+        <img [src]="foto?.controls?.[0]?.get('imagen')?.value" alt="Imagen seleccionada" />
+      </div>
+    </ion-content>
+  </ion-modal> -->
+
+  <!-- Modal VER INFO  -->
+  <ion-modal [isOpen]="isOpenModalGeneral" (didDismiss)="isOpenModalGeneral = false" class="custom-modal3">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>INFORMACIÓN GENERAL</ion-title>
+          <ion-buttons slot="end">
+            <ion-icon name="close-outline" slot="icon-only" (click)="closeModal('general')"
+              style="cursor: pointer;"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding" scroll-y="true">
+        <form [formGroup]="userForm">
+          <ion-grid fixed>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-item>
+                  <ion-select formControlName="estatus" label="ESTATUS:" label-placement="floating"
+                    placeholder="Seleccione un Estatus">
+                    <ion-select-option value="PENDIENTE">PENDIENTE</ion-select-option>
+                    <ion-select-option value="PROCESO">PROCESO</ion-select-option>
+                    <ion-select-option value="COMPLETO">COMPLETO</ion-select-option>
+                    <ion-select-option value="REGISTRADO">REGISTRADO</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-md="6">
+                <ion-item>
+                  <ion-select formControlName="rol" label="ROL:" label-placement="floating"
+                    placeholder="Seleccione un Rol">
+                    <ion-select-option value="LIDER">LIDER</ion-select-option>
+                    <ion-select-option value="RESPONSABLE">RESPONSABLE</ion-select-option>
+                    <ion-select-option value="MOVILIZADOR">MOVILIZADOR</ion-select-option>
+                    <ion-select-option value="INVITADO">INVITADO</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <!-- DATOS PERSONALES -->
+            <ion-row>
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="nombre" readonly label="NOMBRE(S)" label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="paterno" readonly label="APELLIDO PATERNO"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="materno" readonly label="APELLIDO MATERNO"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <!-- CLAVE Y CONTACTO -->
+            <ion-row>
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="ce" readonly label="CLAVE ELECTORAL"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="telefono" readonly type="number" label="TELÉFONO"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="whatsapp" readonly label="WHATSAPP"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <!-- AREA Y RESPONSABLES -->
+            <ion-row>
+              <ion-col size="12">
+                <ion-item>
+                  <ion-label position="stacked">ÁREA:</ion-label>
+                  <ion-text>{{ userForm.get('area')?.value || 'SIN DATOS' }}</ion-text>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-label position="stacked">LÍDER:</ion-label>
+                  <ion-text>{{ userForm.get('lider')?.value || 'SIN DATOS' }}</ion-text>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-label position="stacked">RESPONSABLE:</ion-label>
+                  <ion-text>
+                    <ng-container *ngIf="isArray(userForm.get('responsable')?.value); else respSimple">
+                      <div *ngFor="let r of userForm.get('responsable')?.value">{{ r.nombre || 'SIN DATOS' }}</div>
+                    </ng-container>
+                    <ng-template #respSimple>{{ userForm.get('responsable')?.value || 'SIN DATOS' }}</ng-template>
+                  </ion-text>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-label position="stacked">MOVILIZADOR:</ion-label>
+                  <ion-text>
+                    <ng-container *ngIf="isArray(userForm.get('movilizador')?.value); else movSimple">
+                      <div *ngIf="userForm.get('movilizador')?.value.length > 0; else noMov">
+                        <div *ngFor="let m of userForm.get('movilizador')?.value">{{ m.nombre || m }}</div>
+                      </div>
+                      <ng-template #noMov>SIN DATOS</ng-template>
+                    </ng-container>
+                    <ng-template #movSimple>{{ userForm.get('movilizador')?.value || 'SIN DATOS' }}</ng-template>
+                  </ion-text>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <!-- DIRECCIÓN -->
+            <ion-row>
+              <ion-col size="12" size-md="3">
+                <ion-item>
+                  <ion-input formControlName="seccion" readonly label="SECCIÓN" label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="5">
+                <ion-item>
+                  <ion-input formControlName="sec_calle" readonly label="CALLE" label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="sec_numero" readonly label="NÚMERO"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="6">
+                <ion-item>
+                  <ion-input formControlName="sec_colonia" readonly label="COLONIA"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="6">
+                <ion-item>
+                  <ion-input formControlName="sec_municipio" readonly label="MUNICIPIO"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="sec_cp" readonly label="CÓDIGO POSTAL"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="lat" readonly label="LATITUD" label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item>
+                  <ion-input formControlName="long" readonly label="LONGITUD" label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12">
+                <ion-item>
+                  <ion-input formControlName="sec_referencia" readonly label="REFERENCIA"
+                    label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="12">
+                <ion-item>
+                  <ion-input formControlName="link" readonly label="LINK" label-placement="floating"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <!-- EVIDENCIA FOTOS -->
+            <ion-row>
+              <ion-col size="12" size-md="6" offset-md="3">
+                <ion-list formArrayName="fotos">
+                  <div *ngIf="sinFoto">
+                    <ion-card>
+                      <ion-card-content>SIN EVIDENCIA</ion-card-content>
+                    </ion-card>
+                  </div>
+                  <div *ngFor="let fotoItem of foto.controls; let i = index" [formGroupName]="i">
+                    <ion-card>
+                      <ion-card-content>
+                        <ion-item lines="none" *ngIf="fotoItem.get('imagen')?.value">
+                          <ion-img [src]="fotoItem.get('imagen')?.value" alt="Imagen seleccionada"></ion-img>
+                        </ion-item>
+                      </ion-card-content>
+                    </ion-card>
+                  </div>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+  <!-- Modal jerarquia -->
+  <ion-modal [isOpen]="isOpenModalGerarquias" (didDismiss)="isOpenModalGerarquias = false"
+    class="custom-modal-jerarquia">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>JERARQUIA</ion-title>
+          <ion-buttons style="cursor: pointer;" slot="end">
+            <ion-icon (click)="closeModal('gerarquias')" name="close-outline" slot="icon-only"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div>
+          <ion-list>
+            <div *ngFor="let item of arrayJerarquia; let i = index">
+              <ion-card>
+                <ion-toolbar>
+                  <ion-buttons slot="end">
+                    <ion-button (click)="abrirModalTotales(item)" title="Actualizar Estatus">
+                      <ion-icon slot="icon-only" color="secondary" name="create-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button *ngIf="item.estatus === 'COMPLETO'" (click)="abrirModalFoto(item)" title="Foto">
+                      <ion-icon slot="icon-only" color="secondary" name="image-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="copiarInfo(item)" title="Copiar">
+                      <ion-icon slot="icon-only" color="secondary" name="copy-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="abrirModalGeneral(); VerInfoUser(item)" title="Ver Info">
+                      <ion-icon slot="icon-only" color="secondary" name="eye-outline"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                  <ion-card-header>
+                    <ion-card-title>{{ item.nombre + ' ' + item.paterno + ' ' +
+                      item.materno}}</ion-card-title>
+                    <ion-card-subtitle>
+                      <div *ngIf="item.estatus === 'PENDIENTE'">
+                        <ion-card-subtitle color="danger">
+                          <strong>ESTATUS:</strong> {{item.estatus || 'SIN DATOS' | uppercase }} <br>
+                        </ion-card-subtitle>
+                      </div>
+                      <div *ngIf="item.estatus === 'PROCESO'">
+                        <ion-card-subtitle color="warning">
+                          <strong>ESTATUS:</strong> {{item.estatus || 'SIN DATOS' | uppercase }} <br>
+                        </ion-card-subtitle>
+                      </div>
+                      <div *ngIf="item.estatus === 'COMPLETO'">
+                        <ion-card-subtitle color="success">
+                          <strong>ESTATUS:</strong> {{item.estatus || 'SIN DATOS' | uppercase }} <br>
+                        </ion-card-subtitle>
+                      </div>
+                      <strong>ROL:</strong> {{item.rol || 'SIN DATOS' | uppercase }} <br>
+                      <strong>TELEFONO:</strong> {{item.telefono || 'SIN DATOS' | uppercase }} <br>
+                      <strong>WHATSAPP:</strong> {{item.whatsapp || 'SIN DATOS' | uppercase }} <br>
+                      <div *ngIf="item.rol === 'INVITADO'">
+                        <strong>LIDER:</strong> {{item.lider || 'SIN DATOS' | uppercase }} - 📱 {{item.telefono || 'SIN
+                        DATOS'}} <br>
+                        <strong>Whatsapp:</strong> {{item.whatsapp || 'SIN DATOS'}} <br>
+
+                        <strong>RESPONSABLE:</strong> {{item.responsable?.[0]?.nombre || 'SIN DATOS' | uppercase }} <br>
+
+                        <strong>MOVILIZADOR:</strong> {{item.movilizador?.[0]?.nombre || 'SIN DATOS' | uppercase }} <br>
+
+                      </div>
+                      <div *ngIf="item.rol === 'MOVILIZADOR'">
+                        <strong>LIDER:</strong> {{item.lider || 'SIN DATOS' | uppercase }} - 📱 {{item.telefono || 'SIN
+                        DATOS'}} <br>
+                        <strong>Whatsapp:</strong> {{item.whatsapp || 'SIN DATOS'}} <br>
+
+                        <strong>RESPONSABLE:</strong> {{item.responsable?.[0]?.nombre || 'SIN DATOS' | uppercase }} <br>
+
+                      </div>
+                      <div *ngIf="item.rol === 'RESPONSABLE'">
+                        <strong>LIDER:</strong> {{item.lider || 'SIN DATOS' | uppercase }} - 📱 {{item.telefono || 'SIN
+                        DATOS'}} <br>
+                        <strong>Whatsapp:</strong> {{item.whatsapp || 'SIN DATOS'}} <br>
+                      </div>
+                    </ion-card-subtitle>
+                  </ion-card-header>
+                </ion-toolbar>
+              </ion-card>
+            </div>
+          </ion-list>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

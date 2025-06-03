@@ -1,0 +1,307 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Invitado</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="toggleFormulario()">
+        <ion-icon slot="start" [name]="mostrarFormularioFlag ? 'close' : 'open'"></ion-icon>
+        {{ mostrarFormularioFlag ? 'Cancelar' : 'Nuevo Registro' }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="mostrarFormularioFlag">
+    <form [formGroup]="userForm" (ngSubmit)="newUser()">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="6">
+            <ion-item>
+              <ion-select formControlName="estatus" label="ESTATUS:" label-placement="floating">
+                <ion-select-option value="PENDIENTE">PENDIENTE</ion-select-option>
+                <ion-select-option value="PROCESO">PROCESO</ion-select-option>
+                <ion-select-option value="COMPLETO">COMPLETO</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('estatus')?.invalid && userForm.get('estatus')?.touched">
+              <strong>*ESTATUS</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="6">
+            <ion-item>
+              <ion-select formControlName="rol" label="ROL:" label-placement="floating">
+                <ion-select-option value="LIDER">LIDER</ion-select-option>
+                <ion-select-option value="RESPONSABLE">RESPONSABLE</ion-select-option>
+                <ion-select-option value="MOVILIZADOR">MOVILIZADOR</ion-select-option>
+                <ion-select-option value="INVITADO">INVITADO</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('rol')?.invalid && userForm.get('rol')?.touched">
+              <strong>*ROL</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="nombre" type="text" autocomplete="off" label="NOMBRE (S): "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('nombre')?.invalid && userForm.get('nombre')?.touched">
+              <strong>*NOMBRE</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="paterno" type="text" autocomplete="off" label="APELLIDO PATERNO: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('paterno')?.invalid && userForm.get('paterno')?.touched">
+              <strong>*APELLIDO PATERNO</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="materno" type="text" autocomplete="off" label="APELLIDO MATERNO: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('materno')?.invalid && userForm.get('materno')?.touched">
+              <strong>*APELLIDO MATERNO</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-select formControlName="area" label="AREA:" placeholder="Seleccione una Area"
+                (ionChange)="onAreaChange($event.detail.value)" label-placement="floating">
+                <ion-select-option *ngFor="let area of areasSelect" [value]="area">
+                  {{ area }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('area')?.invalid && userForm.get('area')?.touched">
+              <strong>*AREA</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="telefono" type="number" autocomplete="off" label="TELEFONO: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('telefono')?.invalid && userForm.get('telefono')?.touched">
+              <strong>*TELEFONO</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="whatsapp" type="number" autocomplete="off" label="WHATSAPP: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('whatsapp')?.invalid && userForm.get('whatsapp')?.touched">
+              <strong>*WHATSAPP</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="lider" readonly type="text" autocomplete="off" label="LIDER: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('lider')?.invalid && userForm.get('lider')?.touched">
+              <strong>*LIDER</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-select formControlName="responsable" label="RESPONSABLE:" placeholder="Seleccione un Responsable"
+                (ionChange)="onResponsableChange($event.detail.value)" label-placement="floating">
+                <ion-select-option *ngFor="let r of responsablesSelect" [value]="r">
+                  {{ r.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('responsable')?.invalid && userForm.get('responsable')?.touched">
+              <strong>*RESPONSABLE</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-select formControlName="movilizador" label="MOVILIZADOR:" [disabled]="movilizadoresSelect.length === 0" placeholder="Seleccione un Movilizador"
+                label-placement="floating">
+                <ion-select-option *ngFor="let m of movilizadoresSelect" [value]="m">
+                  {{ m.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('movilizador')?.invalid && userForm.get('movilizador')?.touched">
+              <strong>*MOVILIZADOR</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="ce" type="text" autocomplete="off" label="CLAVE ELECTORAL: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('ce')?.invalid && userForm.get('ce')?.touched">
+              <strong>*CLAVE ELECTORAL</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="seccion" type="text" autocomplete="off" label="SECCION: "
+                (ionInput)="onNumeroInput()" labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('seccion')?.invalid && userForm.get('seccion')?.touched">
+              <strong>*SECCION</strong> es campo obligatorio.
+            </ion-text>
+            <ion-text color="danger" *ngIf="seccionNoEncontrada && userForm.get('seccion')?.valid"
+              style="display: block; text-align: center;">
+              *No se encontró la sección ingresada.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-item>
+              <ion-input formControlName="sec_calle" readonly type="text" autocomplete="off" label="CALLE: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('sec_calle')?.invalid && userForm.get('sec_calle')?.touched">
+              <strong>*CALLE</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="2">
+            <ion-item>
+              <ion-input formControlName="sec_numero" readonly type="text" autocomplete="off" label="NUMERO: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('sec_numero')?.invalid && userForm.get('sec_numero')?.touched">
+              <strong>*NUMERO</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="5">
+            <ion-item>
+              <ion-input formControlName="sec_colonia" readonly type="text" autocomplete="off" label="COLONIA: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('sec_colonia')?.invalid && userForm.get('sec_colonia')?.touched">
+              <strong>*COLONIA</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="5">
+            <ion-item>
+              <ion-input formControlName="sec_municipio" readonly type="text" autocomplete="off" label="MUNICIPIO: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('sec_municipio')?.invalid && userForm.get('sec_municipio')?.touched">
+              <strong>*MUNICIPIO</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-item>
+              <ion-input formControlName="sec_cp" readonly type="text" autocomplete="off" label="CODIGO POSTAL: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('sec_cp')?.invalid && userForm.get('sec_cp')?.touched">
+              <strong>*CODIGO POSTAL</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-item>
+              <ion-input formControlName="lat" readonly type="text" autocomplete="off" label="LATITUD: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('lat')?.invalid && userForm.get('lat')?.touched">
+              <strong>*LATITUD</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="3">
+            <ion-item>
+              <ion-input formControlName="long" readonly type="text" autocomplete="off" label="LONGITUD: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('long')?.invalid && userForm.get('long')?.touched">
+              <strong>*LONGITUD</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="6">
+            <ion-item>
+              <ion-input formControlName="sec_referencia" readonly type="text" autocomplete="off" label="REFERENCIA: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('sec_referencia')?.invalid && userForm.get('sec_referencia')?.touched">
+              <strong>*REFERENCIA</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="6">
+            <ion-item>
+              <ion-input formControlName="link" readonly type="text" autocomplete="off" label="LINK: "
+                labelPlacement="floating"></ion-input>
+            </ion-item>
+            <ion-text color="danger" style="display: block; text-align: center;"
+              *ngIf="userForm.get('link')?.invalid && userForm.get('link')?.touched">
+              <strong>*LINK</strong> es campo obligatorio.
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        <!-- <ion-row>
+          <ion-col size="12" size-md="3" size-lg="3"></ion-col>
+          <ion-col size="12" size-md="6" size-lg="6">
+            <ion-list formArrayName="fotos">
+              <ion-list-header>
+                <ion-label>EVIDENCIA</ion-label>
+                <ion-button *ngIf="foto.length === 0" (click)="addFoto()" expand="block">
+                  <ion-icon name="add-outline" slot="start"></ion-icon>
+                  Agregar Foto
+                </ion-button>
+              </ion-list-header>
+              <div *ngFor="let fotoItem of foto.controls; let i = index" [formGroupName]="i">
+                <ion-card>
+                  <ion-card-content>
+                    <input type="file" #fileInput hidden (change)="onFileChange($event, i)" accept="image/*" />
+                    <ion-col size="12" size-md="6" size-lg="6">
+                      <ion-button class="transparent-button" expand="block" (click)="fileInput.click()">
+                        <ion-icon class="large-icon" slot="icon-only" color="primary" name="image-outline"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                    <ion-item lines="none" *ngIf="fotoItem.get('imagen')?.value">
+                      <ion-img [src]="fotoItem.get('imagen')?.value" alt="Imagen seleccionada"></ion-img>
+                    </ion-item>
+                    <ion-col size="12" size-md="6" size-lg="6">
+                      <ion-button class="transparent-button" expand="block" (click)="removeFoto(i)">
+                        <ion-icon class="large-icon" name="trash-outline" slot="icon-only" color="danger"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+            </ion-list>
+          </ion-col>
+        </ion-row> -->
+      </ion-grid>
+      <ion-button type="submit" expand="full">
+        {{ 'Registrar Invitado' }}
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

@@ -1,0 +1,288 @@
+.custom-footer {
+  /* Mantén la altura deseada */
+  height: 170px;
+  display: flex;
+  /* Flexbox para centrar */
+  justify-content: center;
+  /* Centrado horizontal */
+  align-items: center;
+  /* Centrado vertical */
+  text-align: center;
+  /* Centrado del texto */
+  padding: 0 20px;
+  /* Ajusta los márgenes internos */
+  box-sizing: border-box;
+  /* Incluye padding en el tamaño total */
+}
+
+//tamaño del contenedor del texto del footer
+.tool-footer {
+  width: 70vh;
+}
+
+.custom-title {
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: center;
+  color: black;
+  padding: 10px 20px;
+}
+
+ion-toolbar {
+  --background: transparent;
+}
+
+.toolbar-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.custom-h3,
+.custom-h2 {
+  margin: 0;
+  color: #333;
+}
+
+.custom-h2 {
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+ion-card {
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding-top: 20px;
+  margin-top: 220px;
+}
+
+
+
+/*----------------------------------------estilos responsive---------------------------------------------*/
+@media (max-width: 3000px) {
+  .custom-footer {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .tool-footer {
+    width: 60%;
+  }
+
+  .custom-title {
+    font-size: 15px;
+
+  }
+
+  .custom-h2 {
+    font-size: 38px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 0px;
+    margin-top: 50px;
+  }
+}
+@media (max-width: 2000px) {
+  .custom-footer {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .tool-footer {
+    width: 60%;
+  }
+
+  .custom-title {
+    font-size: 15px;
+
+  }
+
+  .custom-h2 {
+    font-size: 38px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 0px;
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 1680px) {
+  .custom-footer {
+
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .tool-footer {
+    width: 60%;
+  }
+
+  .custom-title {
+    font-size: 15px;
+
+  }
+
+  .custom-h2 {
+    font-size: 38px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 0px;
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 1480px) {
+  .custom-footer {
+
+    flex-direction: column;
+  }
+
+  .tool-footer {
+    width: 90%;
+  }
+
+  .custom-title {
+    font-size: 12px;
+
+  }
+
+  .custom-h2 {
+    font-size: 38px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 20px;
+    margin-top: 50px;
+  }
+}
+
+
+/* Consultas para diferentes tamaños de pantalla */
+@media (max-width: 1080px) {
+  .custom-footer {
+
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .tool-footer {
+    width: 90%;
+  }
+
+  .custom-title {
+    font-size: 14px;
+  }
+
+  .custom-h2 {
+    font-size: 38px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 20px;
+    margin-top: 50px;
+  }
+}
+
+/* Consultas para diferentes tamaños de pantalla */
+@media (max-width: 880px) {
+  .custom-footer {
+    flex-direction: column;
+    padding: 10px;
+
+  }
+
+  .tool-footer {
+    width: 90%;
+  }
+
+  .custom-title {
+    font-size: 14px;
+  }
+
+  .custom-h2 {
+    font-size: 28px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 20px;
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 680px) {
+  .custom-footer {
+    padding: 5px;
+  }
+
+  .custom-title {
+    font-size: 11px;
+  }
+
+  .custom-h2 {
+    font-size: 24px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 20px;
+    margin-top: 120px;
+  }
+}
+
+
+@media (max-width: 400px) {
+  .custom-footer {
+    padding: 5px;
+  }
+
+  .custom-title {
+    font-size: 11px;
+  }
+
+  .custom-h2 {
+    font-size: 24px;
+  }
+
+  ion-card {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding-top: 20px;
+    margin-top: 120px;
+  }
+}

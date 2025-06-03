@@ -1,0 +1,7 @@
+{
+  "name": "TestMaster",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
